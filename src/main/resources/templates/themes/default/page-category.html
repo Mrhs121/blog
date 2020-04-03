@@ -2,8 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:replace="themes/default/header::header(${keyword},null)"></div>
 <body>
+
+<!--
+***************************** 某一个类文章 *******************************
+-->
+
 <div class="main-content common-page clearfix">
     <div class="categorys-item">
+
         <div class="common-title">
             <th:block th:text="${type}"/> : <th:block th:text="${keyword}"/>
         </div>
@@ -12,6 +18,7 @@
                 <p>抱歉，还没有相关文章.</p>
             </div>
         </th:block>
+
         <th:block th:unless="${commons.is_empty(articles)}">
             <div class="post-lists">
                 <div class="post-lists-body">

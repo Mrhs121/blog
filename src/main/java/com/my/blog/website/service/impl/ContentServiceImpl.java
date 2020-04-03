@@ -88,6 +88,7 @@ public class ContentServiceImpl implements IContentService {
 
         String tags = contents.getTags();
         String categories = contents.getCategories();
+        //  controller->service->database
         contentDao.insert(contents);
         Integer cid = contents.getCid();
 
@@ -120,8 +121,14 @@ public class ContentServiceImpl implements IContentService {
                 return contentVo;
             } else {
                 ContentVoExample contentVoExample = new ContentVoExample();
+                // 构造hibnate的查询语句
                 contentVoExample.createCriteria().andSlugEqualTo(id);
                 List<ContentVo> contentVos = contentDao.selectByExampleWithBLOBs(contentVoExample);
+
+                if (contentVos.size() == 0){
+                    // 查询无果
+                    return null;
+                }
                 if (contentVos.size() != 1) {
                     throw new TipException("query content by id and return is not one");
                 }
@@ -147,6 +154,8 @@ public class ContentServiceImpl implements IContentService {
         paginator.setTotal(total);
         return paginator;
     }
+
+
 
     @Override
     public PageInfo<ContentVo> getArticles(String keyword, Integer page, Integer limit) {

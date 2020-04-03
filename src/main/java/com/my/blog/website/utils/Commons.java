@@ -78,6 +78,7 @@ public final class Commons {
      * @return
      */
     public static String site_url(String sub) {
+        System.out.println("===> "+site_option("site_url") + sub);
         return site_option("site_url") + sub;
     }
 
@@ -97,6 +98,7 @@ public final class Commons {
      * @return
      */
     public static String site_option(String key) {
+        System.out.println("-----hs-------> get site option" + key);
         return site_option(key, "");
     }
 
@@ -149,6 +151,7 @@ public final class Commons {
      * @return
      */
     public static String theme_url(String sub) {
+        System.out.println("===> "+site_url(Commons.THEME + sub));
         return site_url(Commons.THEME + sub);
     }
 

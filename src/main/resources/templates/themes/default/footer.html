@@ -35,15 +35,14 @@
             <div class="meta-item meta-copyright">
                 <div class="meta-copyright-info">
                     <div class="info-text">
-                        <a href="http://www.54tianzhisheng.cn" target="_blank" style="display: block;margin: 0 auto;" class="info-logo">
-                            <img style="display: block;margin: 0 auto;" th:src="@{/user/img/logo.png}" th:alt="${commons.site_title()}"/>
-                        </a>
+
                         <br/>
-                        <p>&copy; 版权所有 <a href="https://github.com/zhisheng17/blog" target="_blank"
+                        <p>&copy; 版权所有 <a href="https://github.com/Mrhs121" target="_blank"
                                          rel="nofollow">My Blog</a> 保留一切权利
                         </p>
                         <br/>
-                        <p>赣ICP备16004176号</p>
+                        <p><a style="color: blue" href="http://beian.miit.gov.cn/">赣ICP备17010231号</a></p>
+
                     </div>
                 </div>
             </div>
@@ -153,6 +152,27 @@
 <script th:src="@{//cdn.bootcss.com/headroom/0.9.1/headroom.min.js}"></script>
 <script th:src="@{//cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js}"></script>
 <script th:src="@{//cdn.bootcss.com/instantclick/3.0.1/instantclick.min.js}"></script>
+
+<!--<script th:src="@{//cdn.mathjax.org/mathjax/latest/MathJax.js}" > </script>-->
+<!--<script type="text/javascript"-->
+<!--        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js">-->
+<!--</script>-->
+
+<!--<script type="text/x-mathjax-config">-->
+<!--    /*<![CDATA[*/-->
+<!--  MathJax.Hub.Config({-->
+<!--    extensions: ["tex2jax.js"],-->
+<!--    jax: ["input/TeX", "output/HTML-CSS"],-->
+<!--    tex2jax: {-->
+<!--      inlineMath: [ ['$','$'], ["\\(","\\)"] ],-->
+<!--      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],-->
+<!--      processEscapes: true-->
+<!--    },-->
+<!--    "HTML-CSS": { availableFonts: ["TeX"] }-->
+<!--  });-->
+<!--       /*]]>*/-->
+<!--</script>-->
+
 <script th:inline="javascript">
     /*<![CDATA[*/
     var isOk = [[${is_post}]];
@@ -192,6 +212,7 @@
 </script>
 <script data-no-instant="">
     /*<![CDATA[*/
+
     InstantClick.on('change', function (isInitialLoad) {
         var blocks = document.querySelectorAll('pre code');
         for (var i = 0; i < blocks.length; i++) {
@@ -201,6 +222,7 @@
             if (typeof ga !== 'undefined') ga('send', 'pageview', location.pathname + location.search);
         }
     });
+
     InstantClick.init('mousedown');
     /*]]>*/
 </script>

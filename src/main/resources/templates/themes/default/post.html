@@ -24,5 +24,27 @@
 </article>
 <div th:replace="themes/default/comments::comments"></div>
 <div th:replace="themes/default/footer::footer"></div>
+
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js">
+</script>
+<script type="text/x-mathjax-config">
+    /*<![CDATA[*/
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+       /*]]>*/
+</script>
+<script th:src="@{//cdn.mathjax.org/mathjax/latest/MathJax.js}" > </script>
+
+
+
 </body>
 </html>

@@ -30,6 +30,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping("/admin")
+
 @Transactional(rollbackFor = TipException.class)
 public class AuthController extends BaseController {
 

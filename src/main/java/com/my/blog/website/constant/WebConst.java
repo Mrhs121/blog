@@ -63,4 +63,10 @@ public class WebConst {
      * 要过滤的ip列表
      */
     public static final Set<String> BLOCK_IPS = new HashSet<>(16);
+
+    static {
+        initConfig.put("site_description","这是黄大神的博客");
+        initConfig.put("site_url","");
+        String a = new String();
+    }
 }

@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 import java.util.Arrays;
 
 /**
- * 借口aop
+ * 接口aop
  * Created by wangq on 2017/3/24.
  */
 @Aspect
@@ -33,6 +33,7 @@ public class LogAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         // 记录下请求内容
+
         LOGGER.info("URL : " + request.getRequestURL().toString() + ",IP : " + request.getRemoteAddr() + ",CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName() + ",ARGS : " + Arrays.toString(joinPoint.getArgs()));
     }
 

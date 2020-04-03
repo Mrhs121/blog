@@ -36,6 +36,14 @@ public class BaseInterceptor implements HandlerInterceptor {
     private AdminCommons adminCommons;
 
 
+    /**
+     * 请求预处理
+     * @param request
+     * @param response
+     * @param o
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String uri = request.getRequestURI();
@@ -70,6 +78,7 @@ public class BaseInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
+        System.out.println("    -------------------> 处理post请求");
         httpServletRequest.setAttribute("commons", commons);//一些工具类和公共方法
         httpServletRequest.setAttribute("adminCommons", adminCommons);
     }

@@ -83,6 +83,9 @@ public class MetaVoExample {
         return offset;
     }
 
+    /**
+     * 一种查询方法（hibernate）
+     */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
 
@@ -114,6 +117,7 @@ public class MetaVoExample {
             if (value == null) {
                 throw new RuntimeException("Value for " + property + " cannot be null");
             }
+            // 动态生成查询语句 condition 查询条件 type=? value 有多种（查看数据表meta）
             criteria.add(new Criterion(condition, value));
         }
 
@@ -658,6 +662,7 @@ public class MetaVoExample {
             if (value instanceof List<?>) {
                 this.listValue = true;
             } else {
+                System.out.println("    -------> 单一值");
                 this.singleValue = true;
             }
         }

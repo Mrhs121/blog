@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.my.blog.website.dao.MetaVoMapper">
+
   <resultMap id="BaseResultMap" type="com.my.blog.website.modal.Vo.MetaVo">
     <id column="mid" jdbcType="INTEGER" property="mid" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -10,6 +11,7 @@
     <result column="sort" jdbcType="INTEGER" property="sort" />
     <result column="parent" jdbcType="INTEGER" property="parent" />
   </resultMap>
+
 
   <resultMap id="MetaDto" type="com.my.blog.website.dto.MetaDto" extends="BaseResultMap">
     <result column="count" property="count" jdbcType="INTEGER"/>
@@ -44,6 +46,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -76,19 +79,25 @@
   <sql id="Base_Column_List">
     mid, name, slug, type, description, sort, parent
   </sql>
+
   <select id="selectByExample" parameterType="com.my.blog.website.modal.Vo.MetaVoExample" resultMap="BaseResultMap">
     select
+
     <if test="distinct">
       distinct
     </if>
+
     <include refid="Base_Column_List" />
     from t_metas
+
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
+
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
+
     <if test="limit != null">
       <if test="offset != null">
         limit ${offset}, ${limit}
@@ -98,6 +107,7 @@
       </if>
     </if>
   </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -114,6 +124,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.my.blog.website.modal.Vo.MetaVo" useGeneratedKeys="true" keyProperty="mid">
     insert into t_metas (mid, name, slug,
       type, description, sort,
@@ -259,6 +270,11 @@
   </select>
 
   <select id="selectDtoByNameAndType" resultMap="MetaDto">
+    select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid where a.type = #{type} and a.name = #{name} group by a.mid
+  </select>
+
+
+  <select id="selectLoveStory" resultMap="MetaDto">
     select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid where a.type = #{type} and a.name = #{name} group by a.mid
   </select>
 

@@ -34,6 +34,7 @@ import java.util.List;
 @Controller("adminIndexController")
 @RequestMapping("/admin")
 @Transactional(rollbackFor = TipException.class)
+//后台密码 admin123456
 public class IndexController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
@@ -135,10 +136,11 @@ public class IndexController extends BaseController {
             UserVo temp = new UserVo();
             temp.setUid(users.getUid());
             String pwd = TaleUtils.MD5encode(users.getUsername() + password);
+
             temp.setPassword(pwd);
             userService.updateByUid(temp);
             logService.insertLog(LogActions.UP_PWD.getAction(), null, request.getRemoteAddr(), this.getUid(request));
-
+            System.out.println(" 新密码为 ："+pwd);
             //更新session中的数据
             UserVo original= (UserVo)session.getAttribute(WebConst.LOGIN_SESSION_KEY);
             original.setPassword(pwd);

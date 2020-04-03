@@ -43,6 +43,7 @@ public class MetaServiceImpl implements IMetaService {
         if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(name)) {
             return metaDao.selectDtoByNameAndType(name, type);
         }
+
         return null;
     }
 

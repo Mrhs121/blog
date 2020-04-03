@@ -145,6 +145,9 @@ public class MapCache {
     static class CacheObject {
         private String key;
         private Object value;
+        /**
+         * 缓存的过期时间
+         */
         private long expired;
 
         public CacheObject(String key, Object value, long expired) {

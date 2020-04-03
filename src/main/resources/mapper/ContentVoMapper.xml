@@ -86,6 +86,7 @@
   <sql id="Blob_Column_List">
     content
   </sql>
+
   <select id="selectByExampleWithBLOBs" parameterType="com.my.blog.website.modal.Vo.ContentVoExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
@@ -102,6 +103,7 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByExample" parameterType="com.my.blog.website.modal.Vo.ContentVoExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -142,6 +144,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.my.blog.website.modal.Vo.ContentVo" useGeneratedKeys="true" keyProperty="cid">
     insert into t_contents (cid, title, slug, 
       created, modified, author_id, 
@@ -156,6 +159,7 @@
       #{allowComment,jdbcType=BIT}, #{allowPing,jdbcType=BIT}, #{allowFeed,jdbcType=BIT}, 
       #{content,jdbcType=LONGVARCHAR})
   </insert>
+
   <insert id="insertSelective" parameterType="com.my.blog.website.modal.Vo.ContentVo" useGeneratedKeys="true" keyProperty="cid">
     insert into t_contents
     <trim prefix="(" suffix=")" suffixOverrides=",">

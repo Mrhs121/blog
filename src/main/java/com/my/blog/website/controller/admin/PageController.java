@@ -58,6 +58,7 @@ public class PageController extends BaseController {
         return "admin/page_edit";
     }
 
+
     @PostMapping(value = "publish")
     @ResponseBody
     @Transactional(rollbackFor = TipException.class)
@@ -72,12 +73,16 @@ public class PageController extends BaseController {
         contents.setStatus(status);
         contents.setSlug(slug);
         contents.setType(Types.PAGE.getType());
-        if (null != allowComment) {
-            contents.setAllowComment(allowComment == 1);
+        if(null != allowComment){
+            System.out.println("-----> 不为空");
         }
-        if (null != allowPing) {
-            contents.setAllowPing(allowPing == 1);
-        }
+        //if (null != allowComment) {
+            contents.setAllowComment(true);
+        //}
+        //if (null != allowPing) {
+            contents.setAllowPing(true);
+        //}
+            contents.setAllowFeed(true);
         contents.setAuthorId(users.getUid());
 
         try {

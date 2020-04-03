@@ -9,17 +9,16 @@ import com.my.blog.website.exception.TipException;
 import com.my.blog.website.modal.Bo.ArchiveBo;
 import com.my.blog.website.modal.Bo.RestResponseBo;
 import com.my.blog.website.modal.Vo.CommentVo;
+import com.my.blog.website.modal.Vo.ContentVoWap;
 import com.my.blog.website.modal.Vo.MetaVo;
 import com.my.blog.website.service.IMetaService;
 import com.my.blog.website.service.ISiteService;
-import com.my.blog.website.utils.PatternKit;
-import com.my.blog.website.utils.TaleUtils;
+import com.my.blog.website.utils.*;
 import com.vdurmont.emoji.EmojiParser;
 import com.my.blog.website.modal.Bo.CommentBo;
 import com.my.blog.website.modal.Vo.ContentVo;
 import com.my.blog.website.service.ICommentService;
 import com.my.blog.website.service.IContentService;
-import com.my.blog.website.utils.IPKit;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +41,7 @@ import java.util.List;
  */
 @Controller
 public class IndexController extends BaseController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
     @Resource
@@ -78,8 +79,12 @@ public class IndexController extends BaseController {
         p = p < 0 || p > WebConst.MAX_PAGE ? 1 : p;
         PageInfo<ContentVo> articles = contentService.getContents(p, limit);
         request.setAttribute("articles", articles);
+        this.keywords(request,"JAVA");
         if (p > 1) {
+            System.out.println("-----------> 翻页");
             this.title(request, "第" + p + "页");
+        } else {
+            this.title(request,"首页");
         }
         return this.render("index");
     }
@@ -243,18 +248,50 @@ public class IndexController extends BaseController {
      */
     @GetMapping(value = "category/{keyword}")
     public String categories(HttpServletRequest request, @PathVariable String keyword, @RequestParam(value = "limit", defaultValue = "12") int limit) {
+        // 先获取到所有分类的名称
         return this.categories(request, keyword, 1, limit);
     }
+
+
+
+
+    @GetMapping(value = "categories")
+    public String allcategories(HttpServletRequest request, @RequestParam(value = "limit", defaultValue = "200") int limit) {
+        List<MetaDto> metas = siteService.metas(Types.CATEGORY.getType(), null, WebConst.MAX_POSTS);
+        List<ContentVoWap> pageInfos = new ArrayList<>();
+        if (metas == null){
+            return this.render_404();
+        } else {
+            for (MetaDto meta: metas) {
+                System.out.println("分类 ======>"+meta.getName());
+                MetaDto metaDto = metaService.getMeta(Types.CATEGORY.getType(), meta.getName());
+                PageInfo<ContentVo> contentsPaginator = contentService.getArticles(metaDto.getMid(), 1, limit);
+
+                pageInfos.add(new ContentVoWap(contentsPaginator, meta.getName()));
+            }
+
+            request.setAttribute("categories", pageInfos);
+//            request.setAttribute("meta", metaDto);
+            request.setAttribute("type", "分类");
+//            request.setAttribute("keyword", keyword);
+
+            return this.render("page-allcategories");
+        }
+
+    }
+
 
     @GetMapping(value = "category/{keyword}/{page}")
     public String categories(HttpServletRequest request, @PathVariable String keyword,
                              @PathVariable int page, @RequestParam(value = "limit", defaultValue = "12") int limit) {
         page = page < 0 || page > WebConst.MAX_PAGE ? 1 : page;
+        // 先获取某个类别的原数据
         MetaDto metaDto = metaService.getMeta(Types.CATEGORY.getType(), keyword);
         if (null == metaDto) {
             return this.render_404();
         }
 
+        // 然后再根据类别的元信息 获取该类别下所有的文章
         PageInfo<ContentVo> contentsPaginator = contentService.getArticles(metaDto.getMid(), page, limit);
 
         request.setAttribute("articles", contentsPaginator);
@@ -265,7 +302,7 @@ public class IndexController extends BaseController {
         return this.render("page-category");
     }
 
-
+    ///////////////    ///////////////    固定页面    ///////////////    ///////////////
     /**
      * 归档页
      *
@@ -278,27 +315,53 @@ public class IndexController extends BaseController {
         return this.render("archives");
     }
 
+    @GetMapping(value = "lovestory")
+    public String love(HttpServletRequest request) {
+//      数据存储在 meta表中的，slug为具体内容
+        return this.render("lovestory");
+    }
+
+    @GetMapping(value = "sitestatistics")
+    public String sitestatistics(HttpServletRequest request) {
+//      数据存储在 meta表中的，slug为具体内容
+        IPUtils.getRegionByIP("10.10.10.10");
+        return this.render("sitestatistics");
+    }
+
     /**
      * 友链页
      *
      * @return
      */
-    @GetMapping(value = "links")
+    @GetMapping(value = "friends")
     public String links(HttpServletRequest request) {
+        System.out.println("=======================================>"+"好友列表");
         List<MetaVo> links = metaService.getMetas(Types.LINK.getType());
         request.setAttribute("links", links);
-        return this.render("links");
+        //   这里还要添加一个 自定义的 说明信息 Types暂定为selfinfo
+        List<MetaVo> selfinfos = metaService.getMetas(Types.SELF_INFO.getType());
+//        System.out.println("=====================> "+selfinfos.get(0).getSlug());
+        request.setAttribute("selfinfos", selfinfos);
+
+        return this.render("friends");
     }
+
+
+    ///////////////    ///////////////    ///////////////    ///////////////    ///////////////
 
     /**
      * 自定义页面,如关于的页面
      */
     @GetMapping(value = "/{pagename}")
     public String page(@PathVariable String pagename, HttpServletRequest request) {
+
         ContentVo contents = contentService.getContents(pagename);
+
         if (null == contents) {
+            System.out.println("----- aboutme is null");
             return this.render_404();
         }
+
         if (contents.getAllowComment()) {
             String cp = request.getParameter("cp");
             if (StringUtils.isBlank(cp)) {
@@ -307,6 +370,7 @@ public class IndexController extends BaseController {
             PageInfo<CommentBo> commentsPaginator = commentService.getComments(contents.getCid(), Integer.parseInt(cp), 6);
             request.setAttribute("comments", commentsPaginator);
         }
+
         request.setAttribute("article", contents);
         updateArticleHit(contents.getCid(), contents.getHits());
         return this.render("page");
@@ -341,7 +405,7 @@ public class IndexController extends BaseController {
      * @param chits
      */
     @Transactional(rollbackFor = TipException.class)
-    private void updateArticleHit(Integer cid, Integer chits) {
+    public void updateArticleHit(Integer cid, Integer chits) {
         Integer hits = cache.hget("article", "hits");
         if (chits == null) {
             chits = 0;
